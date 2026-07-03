@@ -104,33 +104,36 @@ class BinarizeLinear(nn.Linear):
 
     def forward(self, input):
 
-    self.input_float = input.detach().cpu().clone()
+        # Save floating-point input
+        self.input_float = input.detach().cpu().clone()
 
-    if input.size(1) != 784:
-        input_b = binarized(input)
-    else:
-        input_b = input
+        # Binarize input (except MNIST input layer)
+        if input.size(1) != 784:
+            input_b = binarized(input)
+        else:
+            input_b = input
 
-    self.input_binary = input_b.detach().cpu().clone()
+        self.input_binary = input_b.detach().cpu().clone()
 
-    self.weight_float = self.weight.detach().cpu().clone()
+        # Save floating-point weights
+        self.weight_float = self.weight.detach().cpu().clone()
 
-    weight_b = binarized(self.weight)
+        # Binarize weights
+        weight_b = binarized(self.weight)
 
-    self.weight_binary = weight_b.detach().cpu().clone()
+        self.weight_binary = weight_b.detach().cpu().clone()
 
-    out = nn.functional.linear(
-        input_b,
-        weight_b
-    )
+        # Linear layer
+        out = nn.functional.linear(input_b, weight_b)
 
-    if self.bias is not None:
-        self.bias.org = self.bias.data.clone()
-        out += self.bias.view(1, -1).expand_as(out)
+        if self.bias is not None:
+            self.bias.org = self.bias.data.clone()
+            out += self.bias.view(1, -1).expand_as(out)
 
-    self.output_float = out.detach().cpu().clone()
+        # Save output
+        self.output_float = out.detach().cpu().clone()
 
-    return out
+        return out
 
 class BinarizeConv2d(nn.Conv2d):
 
@@ -138,55 +141,37 @@ class BinarizeConv2d(nn.Conv2d):
         super(BinarizeConv2d, self).__init__(*kargs, **kwargs)
 
 
-   def forward(self, input):
+    def forward(self, input):
 
-    # --------------------------------------------------
-    # Save original floating-point input
-    # --------------------------------------------------
-    self.input_float = input.detach().cpu().clone()
+        self.input_float = input.detach().cpu().clone()
 
-    # --------------------------------------------------
-    # Binary activation
-    # --------------------------------------------------
-    if input.size(1) != 3:
-        input_b = binarized(input)
-    else:
-        input_b = input
+        if input.size(1) != 3:
+            input_b = binarized(input)
+        else:
+            input_b = input
 
-    self.input_binary = input_b.detach().cpu().clone()
+        self.input_binary = input_b.detach().cpu().clone()
 
-    # --------------------------------------------------
-    # Save original floating-point weights
-    # --------------------------------------------------
-    self.weight_float = self.weight.detach().cpu().clone()
+        self.weight_float = self.weight.detach().cpu().clone()
 
-    # --------------------------------------------------
-    # Binary weights
-    # --------------------------------------------------
-    weight_b = binarized(self.weight)
+        weight_b = binarized(self.weight)
 
-    self.weight_binary = weight_b.detach().cpu().clone()
+        self.weight_binary = weight_b.detach().cpu().clone()
 
-    # --------------------------------------------------
-    # Convolution
-    # --------------------------------------------------
-    out = nn.functional.conv2d(
-        input_b,
-        weight_b,
-        None,
-        self.stride,
-        self.padding,
-        self.dilation,
-        self.groups
-    )
+        out = nn.functional.conv2d(
+            input_b,
+            weight_b,
+            None,
+            self.stride,
+            self.padding,
+            self.dilation,
+            self.groups
+        )
 
-    if self.bias is not None:
-        self.bias.org = self.bias.data.clone()
-        out += self.bias.view(1, -1, 1, 1).expand_as(out)
+        if self.bias is not None:
+            self.bias.org = self.bias.data.clone()
+            out += self.bias.view(1, -1, 1, 1).expand_as(out)
 
-    # --------------------------------------------------
-    # Save floating-point output
-    # --------------------------------------------------
-    self.output_float = out.detach().cpu().clone()
+        self.output_float = out.detach().cpu().clone()
 
-    return out
+        return out
