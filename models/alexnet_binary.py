@@ -1,6 +1,6 @@
 import torch.nn as nn
 import torchvision.transforms as transforms
-from .binarized_modules import  BinarizeLinear,BinarizeConv2d
+from .binarized_modules_imc import  BinarizeLinear,BinarizeConv2d
 
 __all__ = ['alexnet_binary']
 
