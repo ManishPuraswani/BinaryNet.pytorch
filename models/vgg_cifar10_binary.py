@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
 from torch.autograd import Function
-from .binarized_modules import  BinarizeLinear,BinarizeConv2d
+from .binarized_modules_imc import  BinarizeLinear,BinarizeConv2d
 
 
 
