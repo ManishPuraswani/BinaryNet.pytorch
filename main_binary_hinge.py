@@ -16,7 +16,7 @@ from utils import *
 from datetime import datetime
 from ast import literal_eval
 from torchvision.utils import save_image
-from models.binarized_modules import  HingeLoss
+from models.binarized_modules_imc import  HingeLoss
 
 model_names = sorted(name for name in models.__dict__
                      if name.islower() and not name.startswith("__")
