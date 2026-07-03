@@ -7,8 +7,8 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torch.autograd import Variable
-from models.binarized_modules import  BinarizeLinear,BinarizeConv2d
-from models.binarized_modules import  Binarize,HingeLoss
+from models.binarized_modules_imc import  BinarizeLinear,BinarizeConv2d
+from models.binarized_modules_imc import  Binarize,HingeLoss
 # Training settings
 parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
 parser.add_argument('--batch-size', type=int, default=64, metavar='N',
