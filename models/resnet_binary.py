@@ -1,7 +1,7 @@
 import torch.nn as nn
 import torchvision.transforms as transforms
 import math
-from .binarized_modules import  BinarizeLinear,BinarizeConv2d
+from .binarized_modules_imc import  BinarizeLinear,BinarizeConv2d
 
 __all__ = ['resnet_binary']
 
